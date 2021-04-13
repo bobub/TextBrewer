@@ -1,4 +1,5 @@
 import collections
+import math
 
 from .losses import *
 from .schedulers import *
@@ -53,7 +54,7 @@ Different from other options, when using ``'flsw'`` and ``'cwsm'``, you need to 
 
 
 
-FEATURES = ['hidden','attention']
+FEATURES = ['hidden','attention','value_relation']
 
 
 ADAPTOR_KEYS = ['logits','logits_mask','losses','inputs_mask','labels'] + FEATURES
@@ -151,3 +152,37 @@ def my_L1_loss(feature_S, feature_T, mask=None):
 
 MATCH_LOSS_MAP['my_L1_loss'] = my_L1_loss
 '''
+
+"""
+CUSTOM DEFINED FUNCTIONS
+"""
+# computes the value relation matrix
+def value_relation(values):
+  d_k = values.size(-1)
+  scores = torch.matmul(values, values.transpose(-2,-1)) / math.sqrt(d_k)
+  v_relation = F.softmax(scores, dim=-1)
+  return v_relation
+
+# calculates the cross entropy value relation loss 
+def value_relation_loss(feature_S, feature_T, mask=None):
+
+  # get values from key-value tuple 'past_key_values'
+  _, values_S = feature_S
+  _, values_T = feature_T
+
+  # compute value relation matrix
+  vr_S = value_relation(values_S)
+  vr_T = value_relation(values_T)
+
+  # calculate cross entropy between vr_S and vr_T
+  probs_T = F.softmax(vr_T, dim=-1)
+  if mask is None:
+      probs_T_select = torch.where(vr_T <= -1e-3, torch.zeros_like(vr_T), probs_T)
+      loss = -((probs_T_select * F.log_softmax(vr_S, dim=-1)).sum(dim=-1)).mean()
+  else:
+      mask = mask.to(vr_S).unsqueeze(1).expand(-1, vr_S.size(1), -1) # (bs, num_of_heads, len)
+      loss = -((probs_T * F.log_softmax(vr_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
+  return loss
+
+MATCH_LOSS_MAP['value_relation_ce'] = value_relation_loss
+
