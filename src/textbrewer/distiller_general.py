@@ -76,9 +76,9 @@ class GeneralDistiller(BasicDistiller):
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
         for i in results_T:
-            print(i,'\n', results_T[i].shape)
+            print(i,'\n', results_T[i])
         for i in results_S:
-            print(i,'\n', results_S[i].shape)
+            print(i,'\n', results_S[i])
 
         
 
