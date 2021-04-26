@@ -75,21 +75,28 @@ class GeneralDistiller(BasicDistiller):
 
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
+        
         print('RESULTS_T:\n')
         for i in results_T:
             print(i)
             if type(results_T[i])==list:
                 print(len(results_T[i]))
+            if type(results_T[i]==tuple:
+                print(results_T[i][0])
+                print(results_T[i][1])
             else:
                 print(results_T[i].shape)
             
         print('RESULTS_S:\n')
-        for i in results_T:
+        for i in results_S:
             print(i)
-            if type(results_T[i])==list:
-                print(len(results_T[i]))
+            if type(results_S[i])==list:
+                print(len(results_S[i]))        
+            if type(results_S[i]==tuple:
+                print(results_S[i][0])
+                print(results_S[i][1])
             else:
-                print(results_T[i].shape)
+                print(results_S[i].shape)
         
         
 #         for i in results_T:
