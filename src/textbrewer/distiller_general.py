@@ -75,6 +75,9 @@ class GeneralDistiller(BasicDistiller):
 
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
+        print('Results T: ',results_T.shape)
+        print('Results S: ',results_S.shape)
+        
 
         total_loss, losses_dict = self.compute_loss(results_S, results_T)
 
