@@ -81,7 +81,7 @@ class GeneralDistiller(BasicDistiller):
             print(i)
             if type(results_T[i])==list:
                 print(len(results_T[i]))
-            if type(results_T[i]==tuple:
+            if type(results_T[i])==tuple:
                 print(results_T[i][0])
                 print(results_T[i][1])
             else:
@@ -92,7 +92,7 @@ class GeneralDistiller(BasicDistiller):
             print(i)
             if type(results_S[i])==list:
                 print(len(results_S[i]))        
-            if type(results_S[i]==tuple:
+            if type(results_S[i])==tuple:
                 print(results_S[i][0])
                 print(results_S[i][1])
             else:
