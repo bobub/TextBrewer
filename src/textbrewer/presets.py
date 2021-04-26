@@ -167,8 +167,8 @@ def value_relation(values):
 def value_relation_loss(feature_S, feature_T, mask=None):
 
   # get values from key-value tuple 'past_key_values'
-  _, values_S = feature_S
-  _, values_T = feature_T
+  values_S = feature_S
+  values_T = feature_T
 
   # compute value relation matrix
   vr_S = value_relation(values_S)
