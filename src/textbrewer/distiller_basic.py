@@ -30,7 +30,7 @@ class BasicDistiller(AbstractDistiller):
             logger.info(f"Saving at global step {global_step}, epoch step {step + 1} epoch {epoch+1}")
             coreModel = self.model_S.module if hasattr(self.model_S, "module") else self.model_S
             state_dict = coreModel.state_dict()
-            torch.save(state_dict, os.path.join(self.t_config.output_dir, f"gs{global_step}.pkl"))
+            #torch.save(state_dict, os.path.join(self.t_config.output_dir, f"gs{global_step}.pkl"))
             if self.local_rank == 0:
                 torch.distributed.barrier()
         if callback is not None:
