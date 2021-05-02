@@ -200,3 +200,5 @@ def kd_cos_loss(logits_S, logits_T, temperature=1):
     beta_logits_S = logits_S / temperature
     loss = torch.nn.CosineSimilarity(beta_logits_S, beta_logits_T)
     return loss
+
+KD_LOSS_MAP['cos'] = kd_cos_loss
