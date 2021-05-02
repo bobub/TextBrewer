@@ -186,3 +186,17 @@ def value_relation_loss(feature_S, feature_T, mask=None):
 
 MATCH_LOSS_MAP['value_relation_ce'] = value_relation_loss
 
+
+def kd_cos_loss(logits_S, logits_T, temperature=1):
+    '''
+    Calculate the cosine similarity loss between logits_S and logits_T
+    :param logits_S: Tensor of shape (batch_size, length, num_labels) or (batch_size, num_labels)
+    :param logits_T: Tensor of shape (batch_size, length, num_labels) or (batch_size, num_labels)
+    :param temperature: A float or a tensor of shape (batch_size, length) or (batch_size,)
+    '''
+    if isinstance(temperature, torch.Tensor) and temperature.dim() > 0:
+        temperature = temperature.unsqueeze(-1)
+    beta_logits_T = logits_T / temperature
+    beta_logits_S = logits_S / temperature
+    loss = torch.nn.CosineSimilarity(beta_logits_S, beta_logits_T)
+    return loss
