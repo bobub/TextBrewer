@@ -17,6 +17,7 @@ def kd_mse_loss(logits_S, logits_T, temperature=1):
     beta_logits_T = logits_T / temperature
     beta_logits_S = logits_S / temperature
     loss = F.mse_loss(beta_logits_S, beta_logits_T)
+    print("MSE Loss: ",loss.shape,'\n',loss)
     return loss
 
 
