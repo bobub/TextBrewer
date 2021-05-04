@@ -249,7 +249,8 @@ class BasicDistiller(AbstractDistiller):
                         logger.info(f"Global step: {global_step}, epoch step:{step+1}")
                     if (global_step%train_steps_per_epoch in checkpoints) \
                             and ((current_epoch+1)%self.t_config.ckpt_epoch_frequency==0 or current_epoch+1==num_epochs):
-                        self.save_and_callback(global_step, step, current_epoch, callback)
+                        valid_loss = self.save_and_callback(global_step, step, current_epoch, callback)
+                        self.write_valid_loss(valid_loss, writer_step-1)
 
             logger.info(f"Epoch {current_epoch+1} finished")
 
