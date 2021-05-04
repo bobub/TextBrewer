@@ -35,8 +35,9 @@ class BasicDistiller(AbstractDistiller):
                 torch.distributed.barrier()
         if callback is not None:
             logger.info("Running callback function...")
-            callback(model=self.model_S, step=global_step)
+            valid_loss = callback(model=self.model_S, step=global_step)
             self.model_S.train()
+            return valid_loss
 
 
     def write_loss(self, total_loss, writer_step, losses_dict=None):
