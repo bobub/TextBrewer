@@ -53,7 +53,7 @@ class BasicDistiller(AbstractDistiller):
     def write_valid_loss(self, valid_loss, writer_step):
         if self.rank == 0:
             #cpu_valid_loss = total_loss.cpu().item()
-            self.tb_writer.add_scalar('scalar/valid_loss', valid_loss, writer_step)
+            self.tb_writer.add_scalar('scalar/cosine_similarity', valid_loss, writer_step)
 
 
     def initialize_training(self, optimizer, scheduler_class, scheduler_args, scheduler):
