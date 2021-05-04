@@ -62,11 +62,13 @@ class GeneralDistiller(BasicDistiller):
             self.model_S._forward_hooks = OrderedDict()  # clear hooks
             self.model_T._forward_hooks = OrderedDict()
 
-        super(GeneralDistiller, self).save_and_callback(global_step, step, epoch, callback)
+        valid_loss = super(GeneralDistiller, self).save_and_callback(global_step, step, epoch, callback)
 
         if self.has_custom_matches:
             self.model_S._forward_hooks = handles_S  # restore hooks
             self.model_T._forward_hooks = handles_T
+        
+        return valid_loss
 
 
     def train_on_batch(self, batch, args):
