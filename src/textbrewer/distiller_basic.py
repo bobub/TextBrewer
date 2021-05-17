@@ -180,7 +180,8 @@ class BasicDistiller(AbstractDistiller):
                 if (global_step) % print_every == 0:
                     logger.info(f"Global step: {global_step}, epoch step:{step+1}")
                 if (global_step%ckpt_steps==0) or global_step==total_global_steps:
-                    self.save_and_callback(global_step, step, 0, callback)
+                    valid_loss = self.save_and_callback(global_step, step, 0, callback)
+                    self.write_valid_loss(valid_loss.item(), writer_step-1)
             if global_step >= total_global_steps:
                 logger.info("Training finished")
                 return
