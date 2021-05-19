@@ -100,7 +100,6 @@ def att_ce_loss(attention_S, attention_T, mask=None):
     probs_T = F.softmax(attention_T, dim=-1)
     mask=None
     if mask is None:
-        print('not using mask!')
         probs_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), probs_T)
         loss = -((probs_T_select * F.log_softmax(attention_S, dim=-1)).sum(dim=-1)).mean()
     else:
