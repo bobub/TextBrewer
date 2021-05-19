@@ -115,7 +115,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         assert torch.any(torch.isinf(F.log_softmax(attention_S, dim=-1)))==False, 'log_softmax of attention_S is NaN'
         assert torch.any(torch.isinf((probs_T * F.log_softmax(attention_S, dim=-1))))==False, 'product of log_softmax and probs_T is NaN'
         assert torch.any(torch.isinf(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask)))==False, 'Its dat boi'
-        assert torch.any(torch.isinf(mask.unsqueeze(2)).sum(dim=-1) * mask))==False, 'its the mask'
+        assert torch.any(torch.isinf(mask.unsqueeze(2)).sum(dim=-1) * mask)==False, 'its the mask'
         print(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum())
         print('Mask sum:\n',mask.sum())
         print('Mask')
