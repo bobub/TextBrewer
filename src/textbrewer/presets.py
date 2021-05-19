@@ -165,7 +165,7 @@ def value_relation(values):
 
 # calculates the cross entropy value relation loss 
 def value_relation_loss(feature_S, feature_T, mask=None):
-
+  mask = None
   # get values from key-value tuple 'past_key_values'
   values_S = feature_S
   values_T = feature_T
