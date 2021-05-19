@@ -100,6 +100,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         probs_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), probs_T)
         assert torch.any(torch.isnan(probs_T_select))==False, 'Att_CE Probs_T_select is NaN'
         assert torch.any(torch.isnan(F.log_softmax(attention_S, dim=-1)))==False, 'log_softmax of attention_S is NaN'
+        assert torch.any(torch.isnan((probs_T_select * F.log_softmax(attention_S, dim=-1))))==False, 'product of log_softmax and probs_T_select is NaN'
         loss = -((probs_T_select * F.log_softmax(attention_S, dim=-1)).sum(dim=-1)).mean()
     else:
         #print('Probs_T: ', probs_T.shape, '\n', probs_T)
@@ -107,6 +108,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         #print('mask: ', mask.shape, '\n', mask)
         #print('probs_T*log_softmax(att_S): ', (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1).shape, "\n", (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1))
         loss = -((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
+        print('Mask')
     # check 
     assert torch.isnan(loss)==False, 'Att CE loss is NaN'
     return loss
