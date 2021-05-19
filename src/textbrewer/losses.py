@@ -92,9 +92,12 @@ def att_ce_loss(attention_S, attention_T, mask=None):
     :param torch.Tensor logits_T: tensor of shape  (*batch_size*, *num_heads*, *length*, *length*)
     :param torch.Tensor mask:     tensor of shape  (*batch_size*, *length*)
     '''
+    assert torch.isnan(attention_S)==False, 'Att_CE Att_s is NaN'
+    assert torch.isnan(attention_T)==False, 'Att_CE Att_T is NaN'
     probs_T = F.softmax(attention_T, dim=-1)
     if mask is None:
         probs_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), probs_T)
+        assert torch.isnan(probs_T_select)==False, 'Att_CE Probs_T_select is NaN'
         loss = -((probs_T_select * F.log_softmax(attention_S, dim=-1)).sum(dim=-1)).mean()
     else:
         #print('Probs_T: ', probs_T.shape, '\n', probs_T)
