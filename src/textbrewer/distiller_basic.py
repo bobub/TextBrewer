@@ -170,6 +170,7 @@ class BasicDistiller(AbstractDistiller):
                     scheduler.step()
                 optimizer.zero_grad()
                 global_step += 1
+                print('Global Step: ',global_step,' of ',total_global_steps)
                 if self.d_config.kd_loss_weight_scheduler is not None:
                     self.d_config.kd_loss_weight = \
                         self.d_config.kd_loss_weight_scheduler(global_step/total_global_steps)
