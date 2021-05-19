@@ -169,21 +169,16 @@ def value_relation_loss(feature_S, feature_T, mask=None):
   # get values from key-value tuple 'past_key_values'
   values_S = feature_S
   values_T = feature_T
-  assert torch.all(torch.isnan(values_S))==False, 'values_S is NaN in value_relation_loss'
-  assert torch.all(torch.isnan(values_T))==False, 'values_T is NaN in value_relation_loss'
 
   # compute value relation matrix
   vr_S = value_relation(values_S)
   vr_T = value_relation(values_T)
-  assert torch.all(torch.isnan(vr_S))==False, 'vr_S is NaN in value_relation_loss'
-  assert torch.all(torch.isnan(vr_T))==False, 'vr_T is NaN in value_relation_loss'
   
 
   # calculate cross entropy between vr_S and vr_T
   probs_T = F.softmax(vr_T, dim=-1)
   if mask is None:
       probs_T_select = torch.where(vr_T <= -1e-3, torch.zeros_like(vr_T), probs_T)
-      assert torch.all(torch.isnan(probs_T_select))==False, 'probs_T_select is NaN in value_relation_loss'
       loss = -((probs_T_select * F.log_softmax(vr_S, dim=-1)).sum(dim=-1)).mean()
   else:
       mask = mask.to(vr_S).unsqueeze(1).expand(-1, vr_S.size(1), -1) # (bs, num_of_heads, len)
