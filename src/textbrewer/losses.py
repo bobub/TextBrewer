@@ -98,6 +98,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
     assert torch.any(torch.isinf(attention_S))==False, 'Att_CE Att_s is NaN'
     assert torch.any(torch.isinf(attention_T))==False, 'Att_CE Att_T is NaN'
     probs_T = F.softmax(attention_T, dim=-1)
+    mask=None
     if mask is None:
         print('not using mask!')
         probs_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), probs_T)
