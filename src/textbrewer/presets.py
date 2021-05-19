@@ -188,6 +188,7 @@ def value_relation_loss(feature_S, feature_T, mask=None):
   else:
       mask = mask.to(vr_S).unsqueeze(1).expand(-1, vr_S.size(1), -1) # (bs, num_of_heads, len)
       loss = -((probs_T * F.log_softmax(vr_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
+  assert torch.isnan(loss)==False, 'value relation loss is NaN'
   return loss
 
 MATCH_LOSS_MAP['value_relation_ce'] = value_relation_loss
