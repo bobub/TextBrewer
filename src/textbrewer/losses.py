@@ -95,8 +95,8 @@ def att_ce_loss(attention_S, attention_T, mask=None):
     '''
     assert torch.any(torch.isnan(attention_S))==False, 'Att_CE Att_s is NaN'
     assert torch.any(torch.isnan(attention_T))==False, 'Att_CE Att_T is NaN'
-    assert torch.any(torch.isinf(attention_S))==False, 'Att_CE Att_s is NaN'
-    assert torch.any(torch.isinf(attention_T))==False, 'Att_CE Att_T is NaN'
+    assert torch.any(torch.isinf(attention_S))==False, 'Att_CE Att_s is inf'
+    assert torch.any(torch.isinf(attention_T))==False, 'Att_CE Att_T is inf'
     probs_T = F.softmax(attention_T, dim=-1)
     mask=None
     if mask is None:
@@ -107,20 +107,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         #print('Probs_T: ', probs_T.shape, '\n', probs_T)
         mask = mask.to(attention_S).unsqueeze(1).expand(-1, attention_S.size(1), -1)
         # (bs, num_of_heads, len)
-        #print('mask: ', mask.shape, '\n', mask)
-        #print('probs_T*log_softmax(att_S): ', (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1).shape, "\n", (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1))
         loss = -((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
-
-        assert torch.any(torch.isinf(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask)))==False, 'Its dat boi'
-        assert torch.any(torch.isinf(mask.unsqueeze(2)).sum(dim=-1) * mask)==False, 'its the mask'
-        assert torch.any(torch.isnan(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask)))==False, 'Its dat boi'
-        assert torch.any(torch.isnan(mask.unsqueeze(2)).sum(dim=-1) * mask)==False, 'its the mask'
-        
-        print(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask))
-        
-        print(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum())
-        
-        print('Mask sum:\n',mask.sum())
     # check 
     assert torch.isnan(loss)==False, 'Att CE loss is NaN'
     return loss
