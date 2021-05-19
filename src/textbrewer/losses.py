@@ -55,6 +55,7 @@ def att_mse_loss(attention_S, attention_T, mask=None):
         mask = mask.to(attention_S).unsqueeze(1).expand(-1, attention_S.size(1), -1) # (bs, num_of_heads, len)
         valid_count = torch.pow(mask.sum(dim=2),2).sum()
         loss = (F.mse_loss(attention_S, attention_T, reduction='none') * mask.unsqueeze(-1) * mask.unsqueeze(2)).sum() / valid_count
+    assert torch.isnan(loss)==False, 'att_mse_loss loss is NaN'
     return loss
 
 
@@ -98,6 +99,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
     if mask is None:
         probs_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), probs_T)
         assert torch.any(torch.isnan(probs_T_select))==False, 'Att_CE Probs_T_select is NaN'
+        assert torch.any(torch.isnan(F.log_softmax(attention_S, dim=-1)))==False, 'log_softmax of attention_S is NaN'
         loss = -((probs_T_select * F.log_softmax(attention_S, dim=-1)).sum(dim=-1)).mean()
     else:
         #print('Probs_T: ', probs_T.shape, '\n', probs_T)
