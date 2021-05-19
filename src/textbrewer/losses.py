@@ -105,6 +105,7 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         #print('mask: ', mask.shape, '\n', mask)
         #print('probs_T*log_softmax(att_S): ', (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1).shape, "\n", (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1))
         loss = -((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
+    # check 
     assert torch.isnan(loss)==False, 'Att CE loss is NaN'
     return loss
 
