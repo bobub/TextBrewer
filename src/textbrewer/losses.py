@@ -108,17 +108,17 @@ def att_ce_loss(attention_S, attention_T, mask=None):
         #print('mask: ', mask.shape, '\n', mask)
         #print('probs_T*log_softmax(att_S): ', (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1).shape, "\n", (probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1))
         loss = -((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
-        assert torch.any(torch.isnan(probs_T))==False, 'Att_CE Probs_T is NaN'
-        assert torch.any(torch.isnan(F.log_softmax(attention_S, dim=-1)))==False, 'log_softmax of attention_S is NaN'
-        assert torch.any(torch.isnan((probs_T * F.log_softmax(attention_S, dim=-1))))==False, 'product of log_softmax and probs_T is NaN'
-        assert torch.any(torch.isinf(probs_T))==False, 'Att_CE Probs_T is NaN'
-        assert torch.any(torch.isinf(F.log_softmax(attention_S, dim=-1)))==False, 'log_softmax of attention_S is NaN'
-        assert torch.any(torch.isinf((probs_T * F.log_softmax(attention_S, dim=-1))))==False, 'product of log_softmax and probs_T is NaN'
+
         assert torch.any(torch.isinf(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask)))==False, 'Its dat boi'
         assert torch.any(torch.isinf(mask.unsqueeze(2)).sum(dim=-1) * mask)==False, 'its the mask'
+        assert torch.any(torch.isnan(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask)))==False, 'Its dat boi'
+        assert torch.any(torch.isnan(mask.unsqueeze(2)).sum(dim=-1) * mask)==False, 'its the mask'
+        
+        print(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask))
+        
         print(((probs_T * F.log_softmax(attention_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum())
+        
         print('Mask sum:\n',mask.sum())
-        print('Mask')
     # check 
     assert torch.isnan(loss)==False, 'Att CE loss is NaN'
     return loss
