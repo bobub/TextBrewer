@@ -169,21 +169,21 @@ def value_relation_loss(feature_S, feature_T, mask=None):
   # get values from key-value tuple 'past_key_values'
   values_S = feature_S
   values_T = feature_T
-  assert torch.isnan(values_S), 'values_S is NaN in value_relation_loss'
-  assert torch.isnan(values_T), 'values_T is NaN in value_relation_loss'
+  assert torch.isnan(values_S)==False, 'values_S is NaN in value_relation_loss'
+  assert torch.isnan(values_T)==False, 'values_T is NaN in value_relation_loss'
 
   # compute value relation matrix
   vr_S = value_relation(values_S)
   vr_T = value_relation(values_T)
-  assert torch.isnan(vr_S), 'vr_S is NaN in value_relation_loss'
-  assert torch.isnan(vr_T), 'vr_T is NaN in value_relation_loss'
+  assert torch.isnan(vr_S)==False, 'vr_S is NaN in value_relation_loss'
+  assert torch.isnan(vr_T)==False, 'vr_T is NaN in value_relation_loss'
   
 
   # calculate cross entropy between vr_S and vr_T
   probs_T = F.softmax(vr_T, dim=-1)
   if mask is None:
       probs_T_select = torch.where(vr_T <= -1e-3, torch.zeros_like(vr_T), probs_T)
-      assert torch.isnan(probs_T_select), 'probs_T_select is NaN in value_relation_loss'
+      assert torch.isnan(probs_T_select)==False, 'probs_T_select is NaN in value_relation_loss'
       loss = -((probs_T_select * F.log_softmax(vr_S, dim=-1)).sum(dim=-1)).mean()
   else:
       mask = mask.to(vr_S).unsqueeze(1).expand(-1, vr_S.size(1), -1) # (bs, num_of_heads, len)
@@ -207,7 +207,7 @@ def kd_cos_loss(logits_S, logits_T, temperature=1):
     cos = torch.nn.CosineSimilarity(dim=1, eps=1e-6)
     loss = 1 - cos(beta_logits_T, beta_logits_S).mean()
     #print('CosineSimilarity Loss: ',loss.shape,'\n',loss)
-    assert torch.isnan(loss), 'KD Cos Loss is NaN'
+    assert torch.isnan(loss)==False, 'KD Cos Loss is NaN'
     return loss
 
 KD_LOSS_MAP['cos'] = kd_cos_loss
