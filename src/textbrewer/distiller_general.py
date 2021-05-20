@@ -127,6 +127,21 @@ class GeneralDistiller(BasicDistiller):
         inters_S = {feature: results_S.get(feature,[]) for feature in FEATURES}
         inputs_mask_T = results_T.get('inputs_mask',None)
         inputs_mask_S = results_S.get('inputs_mask',None)
+        
+        # only activate if using a switch student
+        if self.n_experts not None:
+            # EXTRA LOSS: load balancing loss - keeps expert diversity of student
+            # total tokens processed per batch
+            total_tokens_processed = results_S['counts'].sum(dim=-1, keepdims=True)
+            # fractions of tokens routed to each expert
+            route_frac = results['counts']/total_tokens_processed
+            # mean routing probability
+            route_prob = route_prob / total
+            # load balancing loss
+            load_balancing_loss = self.n_experts*(route_frac*route_prob).sum()
+            total_loss+= self.load_balancing_loss_ceof*load_balancing_loss
+            losses_dict['unweighted_load_balancing_loss'] = load_balancing_loss
+        
         for ith,inter_match in enumerate(self.d_config.intermediate_matches):
             layer_T = inter_match.layer_T
             layer_S = inter_match.layer_S
@@ -158,20 +173,6 @@ class GeneralDistiller(BasicDistiller):
             assert torch.isinf(intermediate_loss)==False, 'Intermediate loss is +- inf'
             total_loss += intermediate_loss * match_weight
             losses_dict[f'unweighted_{feature}_{loss_type}_{name_S}_{name_T}'] = intermediate_loss
-            
-            # only activate if using a switch student
-            if self.n_experts not None:
-                # EXTRA LOSS: load balancing loss - keeps expert diversity of student
-                # total tokens processed per batch
-                total_tokens_processed = results_S['counts'].sum(dim=-1, keepdims=True)
-                # fractions of tokens routed to each expert
-                route_frac = results['counts']/total_tokens_processed
-                # mean routing probability
-                route_prob = route_prob / total
-                # load balancing loss
-                load_balancing_loss = self.n_experts*(route_frac*route_prob).sum()
-                total_loss+= self.load_balancing_loss_ceof*load_balancing_loss
-                losses_dict['unweighted_load_balancing_loss'] = load_balancing_loss
 
         if self.has_custom_matches:
             for hook_T, hook_S, match_weight, match_loss, proj_func  in \
