@@ -129,7 +129,7 @@ class GeneralDistiller(BasicDistiller):
         inputs_mask_S = results_S.get('inputs_mask',None)
         
         # only activate if using a switch student
-        if self.n_experts not None:
+        if self.n_experts!='none':
             # EXTRA LOSS: load balancing loss - keeps expert diversity of student
             # total tokens processed per batch
             total_tokens_processed = results_S['counts'].sum(dim=-1, keepdims=True)
