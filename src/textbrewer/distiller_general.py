@@ -24,6 +24,8 @@ class GeneralDistiller(BasicDistiller):
                  model_S,
                  adaptor_T,
                  adaptor_S,
+                 n_experts,
+                 load_balancing_loss_ceof,
                  custom_matches: Optional[List[CustomMatch]] = None):
         # custom_matches=[{'module_T': module_T, 'module_S':module_S,
         #                 'loss': loss, 'weight': weight},...]
@@ -54,6 +56,9 @@ class GeneralDistiller(BasicDistiller):
             self.has_custom_matches = True
         
         self.d_config.is_caching_logits = False
+        
+        self.n_experts = n_experts
+        self.load_balancing_loss_ceof = load_balancing_loss_ceof
 
     def save_and_callback(self,global_step, step, epoch, callback):
         if self.has_custom_matches:
@@ -153,6 +158,20 @@ class GeneralDistiller(BasicDistiller):
             assert torch.isinf(intermediate_loss)==False, 'Intermediate loss is +- inf'
             total_loss += intermediate_loss * match_weight
             losses_dict[f'unweighted_{feature}_{loss_type}_{name_S}_{name_T}'] = intermediate_loss
+            
+            # only activate if using a switch student
+            if self.n_experts not None:
+                # EXTRA LOSS: load balancing loss - keeps expert diversity of student
+                # total tokens processed per batch
+                total_tokens_processed = results_S['counts'].sum(dim=-1, keepdims=True)
+                # fractions of tokens routed to each expert
+                route_frac = results['counts']/total_tokens_processed
+                # mean routing probability
+                route_prob = route_prob / total
+                # load balancing loss
+                load_balancing_loss = self.n_experts*(route_frac*route_prob).sum()
+                total_loss+= self.load_balancing_loss_ceof*load_balancing_loss
+                losses_dict['unweighted_load_balancing_loss'] = load_balancing_loss
 
         if self.has_custom_matches:
             for hook_T, hook_S, match_weight, match_loss, proj_func  in \
