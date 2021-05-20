@@ -134,9 +134,9 @@ class GeneralDistiller(BasicDistiller):
             # total tokens processed per batch
             total_tokens_processed = results_S['counts'].sum(dim=-1, keepdims=True)
             # fractions of tokens routed to each expert
-            route_frac = results['counts']/total_tokens_processed
+            route_frac = results_S['counts']/total_tokens_processed
             # mean routing probability
-            route_prob = route_prob / total
+            route_prob = results_S['route_prob'] / total_tokens_processed
             # load balancing loss
             load_balancing_loss = self.n_experts*(route_frac*route_prob).sum()
             total_loss+= self.load_balancing_loss_ceof*load_balancing_loss
