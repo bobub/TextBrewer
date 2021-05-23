@@ -170,7 +170,7 @@ class BasicDistiller(AbstractDistiller):
                 optimizer.zero_grad()
                 global_step += 1
                 print('Global Step: ',global_step,' of ',total_global_steps)
-                if global_step%5==0:
+                if global_step%(0.1*num_steps)==0:
                     valid_loss = self.save_and_callback(global_step, step, 0, callback)
                     self.write_valid_loss(valid_loss.item(), writer_step-1)
                 if self.d_config.kd_loss_weight_scheduler is not None:
