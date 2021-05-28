@@ -201,6 +201,7 @@ def kd_cos_loss(logits_S, logits_T, temperature=1):
     loss = 1 - cos(beta_logits_T, beta_logits_S).mean()
     #print('CosineSimilarity Loss: ',loss.shape,'\n',loss)
     assert torch.isnan(loss)==False, 'KD Cos Loss is NaN'
+    print('Cos Loss: ',loss)
     return loss
 
 KD_LOSS_MAP['cos'] = kd_cos_loss
