@@ -47,6 +47,7 @@ def att_mse_loss(attention_S, attention_T, mask=None):
     :param torch.Tensor logits_T: tensor of shape  (*batch_size*, *num_heads*, *length*, *length*)
     :param torch.Tensor mask: tensor of shape  (*batch_size*, *length*)
     '''
+    mask = None
     if mask is None:
         attention_S_select = torch.where(attention_S <= -1e-3, torch.zeros_like(attention_S), attention_S)
         attention_T_select = torch.where(attention_T <= -1e-3, torch.zeros_like(attention_T), attention_T)
@@ -56,6 +57,7 @@ def att_mse_loss(attention_S, attention_T, mask=None):
         valid_count = torch.pow(mask.sum(dim=2),2).sum()
         loss = (F.mse_loss(attention_S, attention_T, reduction='none') * mask.unsqueeze(-1) * mask.unsqueeze(2)).sum() / valid_count
     assert torch.isnan(loss)==False, 'att_mse_loss loss is NaN'
+    print('Att MSE loss: ',loss)
     return loss
 
 
