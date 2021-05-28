@@ -33,10 +33,10 @@ class GeneralDistiller(BasicDistiller):
 
         self.projs = []
         self.projs_group = []
-        self.attentions_S = torch.empty((256, 12, 32, 32))
-        self.values_S = torch.empty((256, 12, 32, 32))
-        self.attentions_T = torch.empty((256, 12, 32, 32))
-        self.values_T = torch.empty((256, 12, 32, 32))
+        self.attentions_S = torch.empty((256, 12, 32, 32)).to(device=torch.device('cuda'))
+        self.values_S = torch.empty((256, 12, 32, 32)).to(device=torch.device('cuda'))
+        self.attentions_T = torch.empty((256, 12, 32, 32)).to(device=torch.device('cuda'))
+        self.values_T = torch.empty((256, 12, 32, 32)).to(device=torch.device('cuda'))
         for im in self.d_config.intermediate_matches:
             if im.proj is not None:
                 projection = im.proj[0]
