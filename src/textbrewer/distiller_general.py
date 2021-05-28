@@ -87,10 +87,10 @@ class GeneralDistiller(BasicDistiller):
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
         
-        print('Student Attentions are equal:', torch.equal(results_S['attentions'], self.attentions_S)
-        print('Teacher Attentions are equal:', torch.equal(results_T['attentions'], self.attentions_T)   
-        print('Student Values are equal:', torch.equal(results_S['value_relation'], self.values_S)
-        print('Teacher Values are equal:', torch.equal(results_T['value_relation'], self.values_T)
+        print('Student Attentions are equal:', torch.equal(results_S['attentions'], self.attentions_S))
+        print('Teacher Attentions are equal:', torch.equal(results_T['attentions'], self.attentions_T))  
+        print('Student Values are equal:', torch.equal(results_S['value_relation'], self.values_S))
+        print('Teacher Values are equal:', torch.equal(results_T['value_relation'], self.values_T))
         
         self.attentions_S = results_S['attentions']
         self.attentions_T = results_T['atttentions']
