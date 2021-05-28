@@ -92,8 +92,8 @@ class GeneralDistiller(BasicDistiller):
         print('Student Values are equal:', torch.equal(results_S['value_relation'], self.values_S))
         print('Teacher Values are equal:', torch.equal(results_T['value_relation'], self.values_T))
         
-        self.attentions_S = results_S['attentions']
-        self.attentions_T = results_T['atttentions']
+        self.attentions_S = results_S['attention']
+        self.attentions_T = results_T['atttention']
         self.values_S = results_S['value_relation']
         self.values_T = results_T['value_relation']
               
