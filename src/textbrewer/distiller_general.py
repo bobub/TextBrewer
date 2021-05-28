@@ -33,6 +33,10 @@ class GeneralDistiller(BasicDistiller):
 
         self.projs = []
         self.projs_group = []
+        self.attentions_S = torch.empty((256, 12, 32, 32))
+        self.values_S = torch.empty((256, 12, 32, 32))
+        self.attentions_T = torch.empty((256, 12, 32, 32))
+        self.values_T = torch.empty((256, 12, 32, 32))
         for im in self.d_config.intermediate_matches:
             if im.proj is not None:
                 projection = im.proj[0]
@@ -82,7 +86,17 @@ class GeneralDistiller(BasicDistiller):
 
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
-
+        
+        print('Student Attentions are equal:', torch.equal(results_S['attentions'], self.attentions_S)
+        print('Teacher Attentions are equal:', torch.equal(results_T['attentions'], self.attentions_T)   
+        print('Student Values are equal:', torch.equal(results_S['value_relation'], self.values_S)
+        print('Teacher Values are equal:', torch.equal(results_T['value_relation'], self.values_T)
+        
+        self.attentions_S = results_S['attentions']
+        self.attentions_T = results_T['atttentions']
+        self.values_S = results_S['value_relation]
+        self.values_T = results_T['value_relation']
+              
         total_loss, losses_dict = self.compute_loss(results_S, results_T)
 
         return total_loss, losses_dict
