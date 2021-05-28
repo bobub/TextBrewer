@@ -94,7 +94,7 @@ class GeneralDistiller(BasicDistiller):
         
         self.attentions_S = results_S['attentions']
         self.attentions_T = results_T['atttentions']
-        self.values_S = results_S['value_relation]
+        self.values_S = results_S['value_relation']
         self.values_T = results_T['value_relation']
               
         total_loss, losses_dict = self.compute_loss(results_S, results_T)
