@@ -173,12 +173,10 @@ class GeneralDistiller(BasicDistiller):
                     #inter_T = [self.projs[ith](t) for t in inter_T]
                     inter_S = [self.projs[ith](s) for s in inter_S]
             else:
-                print('Inters_S:',inters_S)
-                print('Inters_T:',inters_T)
                 inter_S = inters_S[feature][layer_S]
                 inter_T = inters_T[feature][layer_T]
-                print('Inter_S: ',inter_S)
-                print('Inter_T: ',inter_T)
+                print('Inter_S {}:  '.format(feature), inter_S)
+                print('Inter_T {}: '.format(feature), inter_T)
                 name_S = str(layer_S)
                 name_T = str(layer_T)
                 if self.projs[ith]:
