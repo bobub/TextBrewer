@@ -177,8 +177,8 @@ class GeneralDistiller(BasicDistiller):
                 inter_T = inters_T[feature][layer_T]
                 #print('Inter_S {}:  '.format(feature), inter_S)
                 print('Inter _s feature':inters_S[feature])
-                #if inters_S[feature]=='value_relation':
-                    
+                if inters_S[feature]=='value_relation':
+                    print('Inter_s {}: '.format(feature), inter_T)
                 #print('Inter_T {}: '.format(feature), inter_T)
                 name_S = str(layer_S)
                 name_T = str(layer_T)
