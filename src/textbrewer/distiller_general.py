@@ -178,8 +178,8 @@ class GeneralDistiller(BasicDistiller):
                 inter_T = inters_T[feature][layer_T]
                 #print('Inter_S {}:  '.format(feature), inter_S)
                 #print('Inter _s feature', inters_S[feature])
-                print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(inters_S.shape)), inter_S)
-                print('Inter_t {}, {}, {}: '.format(feature, loss_type, str(inters_T.shape)), inter_T)
+                print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(inter_S.shape)), inter_S)
+                print('Inter_t {}, {}, {}: '.format(feature, loss_type, str(inter_T.shape)), inter_T)
                 #print('Inter_T {}: '.format(feature), inter_T)
                 name_S = str(layer_S)
                 name_T = str(layer_T)
