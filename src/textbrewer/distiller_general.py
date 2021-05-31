@@ -1,6 +1,7 @@
 
 from .distiller_utils import *
 from .distiller_basic import BasicDistiller
+from .presets import value_relation_loss, value_relation
 
 class GeneralDistiller(BasicDistiller):
     """
@@ -177,7 +178,8 @@ class GeneralDistiller(BasicDistiller):
                 inter_T = inters_T[feature][layer_T]
                 #print('Inter_S {}:  '.format(feature), inter_S)
                 #print('Inter _s feature', inters_S[feature])
-                print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(match_loss)), inter_S)
+                print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(inters_S.shape)), inter_S)
+                print('Inter_t {}, {}, {}: '.format(feature, loss_type, str(inters_T.shape)), inter_T)
                 #print('Inter_T {}: '.format(feature), inter_T)
                 name_S = str(layer_S)
                 name_T = str(layer_T)
@@ -185,6 +187,7 @@ class GeneralDistiller(BasicDistiller):
                     #inter_T = self.projs[ith](inter_T)
                     inter_S = self.projs[ith](inter_S)
             intermediate_loss = match_loss(inter_S, inter_T, mask=inputs_mask_S)
+            print('Manual comp: ', value_relation_loss(inter_S, inter_T))
             assert torch.isnan(intermediate_loss)==False, 'Intermediate loss is NaN'
             assert torch.isinf(intermediate_loss)==False, 'Intermediate loss is +- inf'
             total_loss += intermediate_loss * match_weight
