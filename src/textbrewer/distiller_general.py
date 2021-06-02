@@ -183,7 +183,7 @@ class GeneralDistiller(BasicDistiller):
                     #inter_T = self.projs[ith](inter_T)
                     inter_S = self.projs[ith](inter_S)
             intermediate_loss = match_loss(inter_S, inter_T, mask=inputs_mask_S)
-            print('Manual comp using inter_S: ', value_relation_loss(inter_S, inter_T))
+            # print('Manual comp using inter_S: ', value_relation_loss(inter_S, inter_T))
             assert torch.isnan(intermediate_loss)==False, 'Intermediate loss is NaN'
             assert torch.isinf(intermediate_loss)==False, 'Intermediate loss is +- inf'
             total_loss += intermediate_loss * match_weight
