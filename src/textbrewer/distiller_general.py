@@ -87,16 +87,6 @@ class GeneralDistiller(BasicDistiller):
 
         results_T = post_adaptor(self.adaptor_T(teacher_batch,results_T))
         results_S = post_adaptor(self.adaptor_S(student_batch,results_S))
-        
-#         print('Student Attentions are equal:', torch.equal(results_S['attention'], self.attentions_S))
-#         print('Teacher Attentions are equal:', torch.equal(results_T['attention'], self.attentions_T))  
-#         print('Student Values are equal:', torch.equal(results_S['value_relation'], self.values_S))
-#         print('Teacher Values are equal:', torch.equal(results_T['value_relation'], self.values_T))
-        
-#         self.attentions_S = results_S['attention']
-#         self.attentions_T = results_T['attention']
-#         self.values_S = results_S['value_relation']
-#         self.values_T = results_T['value_relation']
               
         total_loss, losses_dict = self.compute_loss(results_S, results_T)
 
@@ -184,8 +174,8 @@ class GeneralDistiller(BasicDistiller):
                 inter_T = inters_T[feature][layer_T]
                 #print('Inter_S {}:  '.format(feature), inter_S)
                 #print('Inter _s feature', inters_S[feature])
-                print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(inter_S.shape)), inter_S)
-                print('Inter_t {}, {}, {}: '.format(feature, loss_type, str(inter_T.shape)), inter_T)
+                #print('Inter_s {}, {}, {}: '.format(feature, loss_type, str(inter_S.shape)), inter_S)
+                #print('Inter_t {}, {}, {}: '.format(feature, loss_type, str(inter_T.shape)), inter_T)
                 #print('Inter_T {}: '.format(feature), inter_T)
                 name_S = str(layer_S)
                 name_T = str(layer_T)
@@ -193,7 +183,7 @@ class GeneralDistiller(BasicDistiller):
                     #inter_T = self.projs[ith](inter_T)
                     inter_S = self.projs[ith](inter_S)
             intermediate_loss = match_loss(inter_S, inter_T, mask=inputs_mask_S)
-            print('Manual comp: ', value_relation_loss(inter_S, inter_T))
+            print('Manual comp using inter_S: ', value_relation_loss(inter_S, inter_T))
             assert torch.isnan(intermediate_loss)==False, 'Intermediate loss is NaN'
             assert torch.isinf(intermediate_loss)==False, 'Intermediate loss is +- inf'
             total_loss += intermediate_loss * match_weight
