@@ -157,6 +157,12 @@ class GeneralDistiller(BasicDistiller):
             total_loss+= self.load_balancing_loss_ceof*load_balancing_loss
             losses_dict['unweighted_load_balancing_loss'] = load_balancing_loss
         
+        if 'value_relation' in results_S:
+            vr_S = results_S['value_relation'][1]
+            vr_T = results_T['value_relation'][11]
+            print('Manually computed VR Loss: ', value_relation_loss(vr_S, vr_T))
+            
+        
         for ith,inter_match in enumerate(self.d_config.intermediate_matches):
             layer_T = inter_match.layer_T
             layer_S = inter_match.layer_S
