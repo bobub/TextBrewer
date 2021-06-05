@@ -180,7 +180,7 @@ def value_relation_loss(values_S, values_T, mask=None):
       mask = mask.to(vr_S).unsqueeze(1).expand(-1, vr_S.size(1), -1) # (bs, num_of_heads, len)
       loss = -((probs_T * F.log_softmax(vr_S, dim=-1) * mask.unsqueeze(2)).sum(dim=-1) * mask).sum() / mask.sum()
   assert torch.isnan(loss)==False, 'value relation loss is NaN'
-  print('VR Loss:',loss)
+  #print('VR Loss:',loss)
   return loss
 
 MATCH_LOSS_MAP['value_relation_ce'] = value_relation_loss
@@ -201,7 +201,7 @@ def kd_cos_loss(logits_S, logits_T, temperature=1):
     loss = 1 - cos(beta_logits_T, beta_logits_S).mean()
     #print('CosineSimilarity Loss: ',loss.shape,'\n',loss)
     assert torch.isnan(loss)==False, 'KD Cos Loss is NaN'
-    print('Cos Loss: ',loss)
+    #print('Cos Loss: ',loss)
     return loss
 
 KD_LOSS_MAP['cos'] = kd_cos_loss
