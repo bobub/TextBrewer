@@ -36,6 +36,7 @@ class BasicDistiller(AbstractDistiller):
         if callback is not None:
             logger.info("Running callback function...")
             valid_loss = callback(model=self.model_S, step=global_step)
+            print('Callback basic - valid loss:', valid_loss)
             self.model_S.train()
             return valid_loss
 
