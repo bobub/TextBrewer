@@ -65,14 +65,14 @@ class GeneralDistiller(BasicDistiller):
         self.n_experts = n_experts
         self.load_balancing_loss_ceof = load_balancing_loss_ceof
 
-    def save_and_callback(self,global_step, step, epoch, callback):
+    def save_and_callback(self,global_step, step, epoch, callback, optimizer, losses_dict, total_loss):
         if self.has_custom_matches:
             handles_T = self.model_T._forward_hooks
             handles_S = self.model_S._forward_hooks
             self.model_S._forward_hooks = OrderedDict()  # clear hooks
             self.model_T._forward_hooks = OrderedDict()
 
-        valid_loss = super(GeneralDistiller, self).save_and_callback(global_step, step, epoch, callback)
+        valid_loss = super(GeneralDistiller, self).save_and_callback(global_step, step, epoch, callback, optimizer, losses_dict, total_loss)
 
         if self.has_custom_matches:
             self.model_S._forward_hooks = handles_S  # restore hooks
