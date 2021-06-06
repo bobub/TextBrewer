@@ -178,7 +178,7 @@ class BasicDistiller(AbstractDistiller):
                 global_step += 1
                 print('Global Step: ',global_step,' of ',total_global_steps)
                 if global_step%(0.1*num_steps)==0:
-                    valid_loss = self.save_and_callback(global_step, step, 0, callback)
+                    valid_loss = self.save_and_callback(global_step, step, 0, callback, optimizer, losses_dict, total_loss)
                     self.write_valid_loss(valid_loss.item(), writer_step-1)
                 if self.d_config.kd_loss_weight_scheduler is not None:
                     self.d_config.kd_loss_weight = \
@@ -190,7 +190,7 @@ class BasicDistiller(AbstractDistiller):
                     logger.info(f"Global step: {global_step}, epoch step:{step+1}")
                 if (global_step%ckpt_steps==0) or global_step==total_global_steps:
                     print('Global_step%ckpt_steps activated: ')
-                    valid_loss = self.save_and_callback(global_step, step, 0, callback)
+                    valid_loss = self.save_and_callback(global_step, step, 0, callback, optimizer, losses_dict, total_loss)
                     self.write_valid_loss(valid_loss.item(), writer_step-1)
             if global_step >= total_global_steps:
                 logger.info("Training finished")
